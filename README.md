@@ -1,4 +1,4 @@
-# Phone Book
+# Phone Book (Android Only So Far)
 
 An app with which you can see your contacts details add, edit or remove any.
 
