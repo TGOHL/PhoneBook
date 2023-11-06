@@ -1,39 +1,19 @@
-import 'package:flutter/material.dart';
+part of 'details_layout.dart';
 
-import '../models/contact.dart';
-import '../services/database.dart';
-import 'new_contact.dart';
+class DetailsView extends StatelessWidget {
+  const DetailsView({Key? key}) : super(key: key);
 
-class DetailsScreen extends StatefulWidget {
-  static const String routeName = '/details';
-  const DetailsScreen({
-    super.key,
-  });
-
-  @override
-  State<DetailsScreen> createState() => _DetailsScreenState();
-}
-
-class _DetailsScreenState extends State<DetailsScreen> {
-  Contact? contact;
   @override
   Widget build(BuildContext context) {
-    contact ??= ModalRoute.of(context)!.settings.arguments as Contact;
+    Contact? contact = context.watch<DetailsCubit>().contact;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Details'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute<void>(
-                builder: (_) => NewContactScreen(contact: contact),
-              ))
-                  .then((val) {
-                setState(() {
-                  contact = DatabaseServices.getContactById(contact!.id);
-                });
-              });
+              context.read<NewContactCubit>().setContact(contact);
+              Navigator.of(context).pushNamed(NewContactScreen.routeName);
             },
             icon: Icon(Icons.edit),
           ),
@@ -47,7 +27,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           contact!.hasImage
               ? CircleAvatar(
-                  backgroundImage: NetworkImage(contact!.avatar!),
+                  backgroundImage: NetworkImage(contact.avatar!),
                   radius: 56,
                 )
               : Container(
@@ -66,7 +46,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             height: 16,
           ),
           Text(
-            contact!.name,
+            contact.name,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           const SizedBox(
@@ -87,7 +67,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ),
               ),
               Text(
-                contact!.phone,
+                contact.phone,
                 style: const TextStyle(fontSize: 20),
               ),
             ],
@@ -97,7 +77,51 @@ class _DetailsScreenState extends State<DetailsScreen> {
             width: MediaQuery.of(context).size.width * 0.7,
             height: 48,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showAdaptiveDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog.adaptive(
+                      title: const Text(
+                        "Are you sure?",
+                      ),
+                      content: const Text(
+                          "You cannot restore data that have been deleted."),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white24,
+                          ),
+                          child: const Text(
+                            "CANCEL",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.read<HomeCubit>().deleteContact(contact.id);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text(
+                            "Delete",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text(
                 'Delete Contact',

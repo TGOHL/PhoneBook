@@ -1,11 +1,33 @@
-import '../models/contact.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta/meta.dart';
 
-class DatabaseServices {
-  static final List<Contact> _contacts = [];
+import '../../models/contact.dart';
 
-  static List<Contact> get contacts => [..._contacts];
+part 'home_state.dart';
 
-  static void initContacts() {
+class HomeCubit extends Cubit<HomeState> {
+  HomeCubit() : super(HomeInitial());
+
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  int _nextID = 0;
+
+  int get nextId => _nextID;
+
+  void setDarkMode(bool isEnabled) {
+    if (_isDarkMode == isEnabled) return;
+    _isDarkMode = isEnabled;
+    emit(HomeContactModeChanged());
+  }
+
+  final List<Contact> _contacts = [];
+
+  List<Contact> get contacts => [..._contacts];
+
+  void initContacts() {
     Contact c1 = Contact(
       id: "1",
       name: "Alice Johnson",
@@ -40,24 +62,29 @@ class DatabaseServices {
     );
 
     _contacts.addAll([c1, c2, c3, c4, c5]);
+    _nextID = 6;
+    emit(HomeContactsInit());
   }
 
-  static void addContact(Contact contact) {
+  void addContact(Contact contact) {
     _contacts.add(contact);
+    _nextID++;
+    emit(HomeContactAdded());
   }
 
-  static void editContact(Contact contact) {
+  void editContact(Contact contact) {
     int index = _contacts.indexWhere((element) => element.id == contact.id);
     _contacts[index].name = contact.name;
     _contacts[index].phone = contact.phone;
-
+    emit(HomeContactEdited());
   }
 
-  static Contact getContactById(String id) {
+  Contact getContactById(String id) {
     return _contacts.firstWhere((e) => e.id == id);
   }
 
-  static void deleteContact(String id) {
+  void deleteContact(String id) {
     _contacts.removeWhere((e) => e.id == id);
+    emit(HomeContactRemoved());
   }
 }

@@ -1,16 +1,18 @@
-# test2
+# Phone Book (Android Only So Far)
 
-A new Flutter project.
+An app with which you can see your contacts details add, edit or remove any.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is an easy to use app to add contacts to your phone where you can review to edit or remove.
 
-A few resources to get you started if this is your first Flutter project:
+## Instructions
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* the app contains 3 screens :
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+1- Home screen: where you cna see your contacts - name and phone number -.
+
+2- Details Screen: where you can see the details of a specific contact with opionts to edit or delete it.
+
+3- Add/Edit Screen: where you can edit or insert new data for a new contact.
