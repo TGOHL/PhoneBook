@@ -9,3 +9,4 @@ final class HomeContactsInit extends HomeState {}
 final class HomeContactAdded extends HomeState {}
 final class HomeContactEdited extends HomeState {}
 final class HomeContactRemoved extends HomeState {}
+final class HomeContactSearched extends HomeState {}

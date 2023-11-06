@@ -9,8 +9,8 @@ class NewContactCubit extends Cubit<NewContactState> {
   NewContactCubit() : super(NewContactInitial());
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   Contact? _contact;
 
   bool get isNewContact => _contact == null;

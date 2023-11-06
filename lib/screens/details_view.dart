@@ -106,6 +106,7 @@ class DetailsView extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop();
                             context.read<HomeCubit>().deleteContact(contact.id);
+                            Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

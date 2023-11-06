@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -8,6 +9,7 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
+  final TextEditingController _searchController = TextEditingController();
 
   bool _isDarkMode = false;
 
@@ -16,6 +18,7 @@ class HomeCubit extends Cubit<HomeState> {
   int _nextID = 0;
 
   int get nextId => _nextID;
+  TextEditingController get searchController => _searchController;
 
   void setDarkMode(bool isEnabled) {
     if (_isDarkMode == isEnabled) return;
@@ -25,7 +28,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   final List<Contact> _contacts = [];
 
-  List<Contact> get contacts => [..._contacts];
+  List<Contact> get contactsFull => [..._contacts];
+  List<Contact> contacts = [];
 
   void initContacts() {
     Contact c1 = Contact(
@@ -62,6 +66,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
 
     _contacts.addAll([c1, c2, c3, c4, c5]);
+    contacts.addAll([c1, c2, c3, c4, c5]);
     _nextID = 6;
     emit(HomeContactsInit());
   }
@@ -69,6 +74,7 @@ class HomeCubit extends Cubit<HomeState> {
   void addContact(Contact contact) {
     _contacts.add(contact);
     _nextID++;
+    _search(searchController.text);
     emit(HomeContactAdded());
   }
 
@@ -76,6 +82,7 @@ class HomeCubit extends Cubit<HomeState> {
     int index = _contacts.indexWhere((element) => element.id == contact.id);
     _contacts[index].name = contact.name;
     _contacts[index].phone = contact.phone;
+    _search(searchController.text);
     emit(HomeContactEdited());
   }
 
@@ -85,6 +92,21 @@ class HomeCubit extends Cubit<HomeState> {
 
   void deleteContact(String id) {
     _contacts.removeWhere((e) => e.id == id);
+    _search(searchController.text);
     emit(HomeContactRemoved());
+  }
+
+  void search(String name) {
+    _search(name);
+    emit(HomeContactSearched());
+  }
+
+  void _search(String name) {
+    contacts = contactsFull;
+    contacts = contacts
+        .where((element) => element.name
+            .toLowerCase()
+            .contains(searchController.text.toLowerCase()))
+        .toList();
   }
 }

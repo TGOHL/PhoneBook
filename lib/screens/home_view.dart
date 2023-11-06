@@ -12,68 +12,93 @@ class HomeView extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('PhoneBook'),
+              actions: [
+                Switch.adaptive(
+                    value: context.read<HomeCubit>().isDarkMode,
+                    onChanged: ((value) =>
+                        context.read<HomeCubit>().setDarkMode(value)))
+              ],
             ),
-            body: ListView.builder(
-              itemCount: context.read<HomeCubit>().contacts.length,
-              itemBuilder: (context, index) {
-                return ConatctTile(
-                  contact: context.read<HomeCubit>().contacts[index],
-                  onTap: () {
-                    context
-                        .read<DetailsCubit>()
-                        .setContact(context.read<HomeCubit>().contacts[index]);
-                    Navigator.of(context).pushNamed(DetailsScreen.routeName);
-                  },
-                  onDelete: () {
-                    showAdaptiveDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text(
-                            "Are you sure?",
-                          ),
-                          content: const Text(
-                              "You cannot restore data that have been deleted."),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white24,
-                              ),
-                              child: const Text(
-                                "CANCEL",
-                                style: TextStyle(
-                                  color: Colors.white,
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    controller: context.read<HomeCubit>().searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    onChanged: context.read<HomeCubit>().search,
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: context.read<HomeCubit>().contacts.length,
+                    itemBuilder: (context, index) {
+                      return ConatctTile(
+                        contact: context.read<HomeCubit>().contacts[index],
+                        onTap: () {
+                          context.read<DetailsCubit>().setContact(
+                              context.read<HomeCubit>().contacts[index]);
+                          Navigator.of(context)
+                              .pushNamed(DetailsScreen.routeName);
+                        },
+                        onDelete: () {
+                          showAdaptiveDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog.adaptive(
+                                title: const Text(
+                                  "Are you sure?",
                                 ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<HomeCubit>().deleteContact(context
-                                    .read<HomeCubit>()
-                                    .contacts[index]
-                                    .id);
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: const Text(
-                                "Delete",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+                                content: const Text(
+                                    "You cannot restore data that have been deleted."),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white24,
+                                    ),
+                                    child: const Text(
+                                      "CANCEL",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context.read<HomeCubit>().deleteContact(
+                                          context
+                                              .read<HomeCubit>()
+                                              .contacts[index]
+                                              .id);
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    child: const Text(
+                                      "Delete",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {

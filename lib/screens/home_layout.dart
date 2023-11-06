@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubits/cubit/new_contact_cubit.dart';
+import '../cubit/new_contact_cubit.dart';
 
-import '../cubits/cubit/details_cubit.dart';
-import '../cubits/cubit/home_cubit.dart';
+import '../cubit/details_cubit.dart';
+import '../cubit/home_cubit.dart';
 import '../widgets/contact_tile.dart';
 import 'details_layout.dart';
 import 'new_contact_layout.dart';
