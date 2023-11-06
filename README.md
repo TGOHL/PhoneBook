@@ -10,7 +10,6 @@ This is an easy to use app to add contacts to your phone where you can review to
 
 * the app contains 3 screens :
 
-* the app contains 3 screens :
 
 1- Home screen: where you cna see your contacts - name and phone number -.
 
